@@ -11,11 +11,16 @@ def start_screen(stdscr): # we need access to stdscr to write things to the scre
 
 
 # to get the typed text to display over the target text
-def display_text(stdscr, target_text, current_text, wpm=0) # =0 makes it an optional parameter
-    stdscr.addstr(target_text) # color_pair() is built-in.
+def display_text(stdscr, target, current, wpm=0): # =0 makes it an optional parameter
+    stdscr.addstr(target) # color_pair() is built-in.
 
-    for char in current_text: # next, we loop through every character that they've typed
-        stdscr.addstr(char, curses.color_pair(1)) # we'll display those characters on the screen in a different color.
+    for i, char in enumerate(current): # this will give us the element and the current text
+        stdscr.addstr(0, i, char, curses.color_pair(1)) # we'll display those characters on the screen in a different color.
+                    # whatever the index is (starting at 0), it will get overlaid on top of target_text as 'i' is incremented by +1.
+
+    # The original way of doing this:
+    # for char in current_text: # next, we loop through every character that they've typed
+    #   stdscr.addstr(char, curses.color_pair(1)) # we'll display those characters on the screen in a different color.
 
 
 def wpm_test(stdscr):
@@ -25,11 +30,7 @@ def wpm_test(stdscr):
     while True:
         # how to show the target_text first ...
         stdscr.clear() # if you don't clear the screen, it will add back everything you've typed so far
-        stdscr.addstr(target_text) # color_pair() is built-in.
-
-        for char in current_text: # next, we loop through every character that they've typed
-            stdscr.addstr(char, curses.color_pair(1)) # we'll display those characters on the screen in a different color.
-
+        display_text(stdscr, target_text, current_text)
         stdscr.refresh() # then, we refresh the screen
         
         # ... then ask the user to hit a key.

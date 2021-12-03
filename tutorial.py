@@ -9,19 +9,22 @@ def start_screen(stdscr): # we need access to stdscr to write things to the scre
     stdscr.refresh()
     stdscr.getkey() # in practice, this adds a delay that will stop the screen from automatically closing.
 
-
 # to get the typed text to display over the target text
 def display_text(stdscr, target, current, wpm=0): # =0 makes it an optional parameter
     stdscr.addstr(target) # color_pair() is built-in.
 
     for i, char in enumerate(current): # this will give us the element and the current text
-        stdscr.addstr(0, i, char, curses.color_pair(1)) # we'll display those characters on the screen in a different color.
-                    # whatever the index is (starting at 0), it will get overlaid on top of target_text as 'i' is incremented by +1.
+        correct_char = target[i]  # telling us what the correct character would be
+        color = curses.color_pair(1)
+        if char != correct_char:
+            color = curses.color_pair(2)
+
+        stdscr.addstr(0, i, char, color) # we'll display those characters on the screen in green or red.
+                    # whatever the index starts at (in this case, 0), it will get overlaid on top of target_text as the 'i' is incremented by +1.
 
     # The original way of doing this:
     # for char in current_text: # next, we loop through every character that they've typed
     #   stdscr.addstr(char, curses.color_pair(1)) # we'll display those characters on the screen in a different color.
-
 
 def wpm_test(stdscr):
     target_text = "Hello world this is a text."
@@ -43,8 +46,8 @@ def wpm_test(stdscr):
             # we'll need to pop off the last element from the list so that our backspaces don't mess things up. 
             if len(current_text) > 0:
                 current_text.pop()
-        else:
-            current_text.append(key) # when they type, it gets appedned to the current text
+        elif len(current_text) < len(target_text): # prevents us from exceeding the characters of the target text.
+            current_text.append(key) # when they type, it gets appended to the current text
 
 # curses will involve some atypical syntax
 def main(stdscr): # the input gives you a "superimposed screen"

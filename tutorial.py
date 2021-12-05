@@ -1,5 +1,7 @@
 import curses
 from curses import wrapper # this will initialize the module and then return the terminal back to the previous state
+import time
+
 
 def start_screen(stdscr): # we need access to stdscr to write things to the screen
     stdscr.clear()
@@ -12,6 +14,7 @@ def start_screen(stdscr): # we need access to stdscr to write things to the scre
 # to get the typed text to display over the target text
 def display_text(stdscr, target, current, wpm=0): # =0 makes it an optional parameter
     stdscr.addstr(target) # color_pair() is built-in.
+    stdscr.addstr(1, 0, f"WPM: {wpm}")  # we'll place the f-string one line below the target text
 
     for i, char in enumerate(current): # this will give us the element and the current text
         correct_char = target[i]  # telling us what the correct character would be
@@ -29,11 +32,16 @@ def display_text(stdscr, target, current, wpm=0): # =0 makes it an optional para
 def wpm_test(stdscr):
     target_text = "Hello world this is a text."
     current_text = []
-  
+    wpm = 0 # initalize it to 0
+    start_time = time.time() # will tell us what the time is when we started the loop.
+    
     while True:
+        time_elapsed = max(time.time() - start.time(), 1) # '1' gives us the *second* time start_time was called; the first one would be incredibly miniscule.
+        wpm = len(current_text) / (time_elapsed/60)  # this gives us characters per minute
+        
         # how to show the target_text first ...
         stdscr.clear() # if you don't clear the screen, it will add back everything you've typed so far
-        display_text(stdscr, target_text, current_text)
+        display_text(stdscr, target_text, current_text, wpm)
         stdscr.refresh() # then, we refresh the screen
         
         # ... then ask the user to hit a key.

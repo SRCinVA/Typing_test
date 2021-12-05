@@ -34,19 +34,25 @@ def wpm_test(stdscr):
     current_text = []
     wpm = 0 # initalize it to 0
     start_time = time.time() # will tell us what the time is when we started the loop.
-    
+    stdscr.nodelay(True)
+
     while True:
-        time_elapsed = max(time.time() - start.time(), 1) # '1' gives us the *second* time start_time was called; the first one would be incredibly miniscule.
-        wpm = len(current_text) / (time_elapsed/60)  # this gives us characters per minute
-        
+        time_elapsed = max(time.time() - start_time, 1) # '1' helps us not divide by 0 below (which is impossible)
+        wpm = round((len(current_text) / (time_elapsed/60)) / 5)  # this gives us words per minute (assuming the average word is 5 characters long)
+                                                                    # lastly, we round it to avoid unmanageable decimals
+                                                                    # wpm will be calculated every time we hit a key
         # how to show the target_text first ...
         stdscr.clear() # if you don't clear the screen, it will add back everything you've typed so far
         display_text(stdscr, target_text, current_text, wpm)
         stdscr.refresh() # then, we refresh the screen
         
-        # ... then ask the user to hit a key.
-        key = stdscr.getkey() # this waits for the user to type something
-        
+        # ... then ask the user to hit a key. But we still this to be counting down on time, even if we're not typing.
+        try:
+            key = stdscr.getkey() # this waits for the user to type something
+                                # 'try' makes sure that it won't crash on us if the user stops typing ...
+        except: # ... if there is a crash, then we tell it to 'continue' by going back to the top of the while loop.
+            continue  # this is necessary because there's no 'key' to carry on with.
+
         if ord(key) == 27: # the ASCII representation of your keyboard for 'esc'
             break
 

@@ -46,6 +46,11 @@ def wpm_test(stdscr):
         display_text(stdscr, target_text, current_text, wpm)
         stdscr.refresh() # then, we refresh the screen
         
+        if "".join(current_text) == target_text:  # turns the list into a string
+            # giving it an empty string ("") join to stacks the characters all into one continuous string
+            stdscr.nodelay(False) # making nodelay into False gives the user a chance to hit a key
+            break  # the user succeeded, so we can break out of the game while loop
+
         # ... then ask the user to hit a key. But we still this to be counting down on time, even if we're not typing.
         try:
             key = stdscr.getkey() # this waits for the user to type something
@@ -73,6 +78,8 @@ def main(stdscr): # the input gives you a "superimposed screen"
 
     start_screen(stdscr)
     wpm_test(stdscr)
+    stdscr.addstr(2,0, "You completed the test! Press any key to continue ...")
+    stdscr.getkey()  # not exactl sure what this accomplishes
 
 wrapper(main) # strangely, 'wrapper' is a function that we pass main() to.
                 # it'll call this function while initializing everything to this module.

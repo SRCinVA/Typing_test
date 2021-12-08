@@ -1,0 +1,5 @@
+1 This is an exceptional line of text.
+2 Actually, this second one is better.
+3 Not to be outdone, here's a third.
+4 The quick brown fox jumped over the lazy dog.
+5 The lazy brown dog jumped over the quick fox.

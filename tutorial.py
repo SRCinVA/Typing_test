@@ -1,7 +1,7 @@
 import curses
 from curses import wrapper # this will initialize the module and then return the terminal back to the previous state
 import time
-
+import random
 
 def start_screen(stdscr): # we need access to stdscr to write things to the screen
     stdscr.clear()
@@ -28,6 +28,10 @@ def display_text(stdscr, target, current, wpm=0): # =0 makes it an optional para
     # The original way of doing this:
     # for char in current_text: # next, we loop through every character that they've typed
     #   stdscr.addstr(char, curses.color_pair(1)) # we'll display those characters on the screen in a different color.
+
+def load_text(): # thsi will select from random lines inteh text file
+    with open("text.txt", "r") as f
+    lines = f.readlines()
 
 def wpm_test(stdscr):
     target_text = "Hello world this is a text."
@@ -77,9 +81,13 @@ def main(stdscr): # the input gives you a "superimposed screen"
     curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)
 
     start_screen(stdscr)
-    wpm_test(stdscr)
-    stdscr.addstr(2,0, "You completed the test! Press any key to continue ...")
-    stdscr.getkey()  # not exactl sure what this accomplishes
+    
+    while True:
+        wpm_test(stdscr)
+        stdscr.addstr(2,0, "You completed the test! Press any key to continue ...")
+        key = stdscr.getkey()  
+        if ord(key) == 27:  # if the key is anything other than 'Esc', then the game continues
+            break
 
 wrapper(main) # strangely, 'wrapper' is a function that we pass main() to.
                 # it'll call this function while initializing everything to this module.

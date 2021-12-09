@@ -30,11 +30,12 @@ def display_text(stdscr, target, current, wpm=0): # =0 makes it an optional para
     #   stdscr.addstr(char, curses.color_pair(1)) # we'll display those characters on the screen in a different color.
 
 def load_text(): # thsi will select from random lines inteh text file
-    with open("text.txt", "r") as f
-    lines = f.readlines()
+    with open("text.txt", "r") as f: #'with' (which is a context manager) closes the file after we have read it.
+        lines = f.readlines()            # this will give us a list containing all the lines in this file 'f'.
+        return random.choice(lines).strip()# we want to randomly choose a line from 'f'. .strip() removes the invisible \n (or other leading/trailing) characters at the end of each line.
 
 def wpm_test(stdscr):
-    target_text = "Hello world this is a text."
+    target_text = load_text()
     current_text = []
     wpm = 0 # initalize it to 0
     start_time = time.time() # will tell us what the time is when we started the loop.
